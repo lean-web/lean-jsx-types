@@ -1,45 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-namespace */
 import { SXLGlobalContext } from "./context";
+import { WebActions, WebContext, EventHandler, IWebHandler } from "./events";
 
-type RefetchState = "TIMEOUT" | "ERROR" | "IGNORED";
-
-export interface WebActions {
-  refetchElement: (
-    id: string,
-    queryParams: Record<string, string | number | boolean>,
-  ) => Promise<boolean | RefetchState>;
-  update: <T extends keyof JSX.IntrinsicElements>(
-    id: string,
-    params: JSX.IntrinsicElements[T],
-  ) => void;
-}
-
-export interface WebContext<Data> {
-  data: Data;
-  actions: WebActions;
-}
-
-/**
- * A web handler.
- *
- * This is the type we expect for event handlers (e.g. onclick).
- */
-export interface IWebHandler<EventType, WebData> {
-  handler: (ev?: EventType, webContext?: WebContext<WebData>) => unknown;
-  data: WebData;
-}
-
-/**
- * Mapped types for converting HTMLElement default event handler function types
- * into the event handlers expected by LeanJSX
- */
-type EventHandler<T, WebContext> = T extends (
-  this: GlobalEventHandlers,
-  ev: infer E,
-) => unknown
-  ? IWebHandler<E, WebContext> | T
-  : T;
+export type { WebContext, WebActions };
 
 // We exclude properties that are actual
 // JavaScript methods for HTMLElement:
@@ -64,7 +28,7 @@ type HTMLAttributes<T extends HTMLElement> = {
     : T[K] extends object
     ? Partial<T[K]>
     : EventHandler<T[K], any>;
-};
+} & { ref?: string };
 
 interface CustomEventMap {
   refetch: CustomEvent<
@@ -137,17 +101,21 @@ declare global {
     /**
      * The children elements of a JSX component.
      */
-    export type Children = Array<string | number | boolean | StaticElement>;
+    export type Children = Array<
+      string | number | boolean | StaticElement | StaticElement[]
+    >;
 
     /**
      * The base properties that a JSX component can receive.
      */
-    export interface Props<G = SXLGlobalContext>
-      extends Omit<HTMLAttributes<HTMLElement>, "children"> {
+    export type Props<P extends object = object, G = SXLGlobalContext> = Omit<
+      HTMLAttributes<HTMLElement>,
+      "children"
+    > & {
       children?: Children;
       dataset?: DOMStringMap;
       globalContext?: G;
-    }
+    } & P & { id?: string };
 
     /**
      * An override of {@link SXL.Props} that allows us to set a custom type for {@link SXLGlobalContext}.
@@ -196,13 +164,24 @@ declare global {
 
     export type AsyncGenFactory = <P>(props: P & SXL.Props) => AsyncGenElement;
 
-    export type IntrinsicElement = {
-      type: string;
+    export type ComponentType =
+      | "string"
+      | "function"
+      | "async-function"
+      | "class"
+      | "async-gen";
+
+    interface BaseElement {
+      componentType: ComponentType;
       props: Props;
       children: Children;
       isDynamic?: boolean;
       ctx?: Context<Record<string, unknown>>;
       refs?: unknown[];
+    }
+
+    export type IntrinsicElement = BaseElement & {
+      type: string;
     };
 
     export type IntrinsicDynamicComponent<T> = Partial<HTMLElement> & T;
@@ -211,35 +190,21 @@ declare global {
      * A narrowed-down type of {@link SXL.StaticElement}.
      * Used for class components.
      */
-    export type ClassElement = {
+    export type ClassElement = BaseElement & {
       type: ClassFactory<SXL.Props>;
-      props: Props;
-      children: Children;
-      isDynamic?: boolean;
-      ctx?: Context<Record<string, unknown>>;
-      refs?: unknown[];
     };
 
     /**
      * A narrowed-down type of {@link SXL.StaticElement}.
      * Used for function components.
      */
-    export type FunctionElement = {
+    export type FunctionElement = BaseElement & {
       type: (props: SXL.Props) => StaticElement | AsyncElement;
       props: Props;
-      children: Children;
-      isDynamic?: boolean;
-      ctx?: Context<Record<string, unknown>>;
-      refs?: unknown[];
     };
 
-    export type FunctionAsyncGenElement = {
+    export type FunctionAsyncGenElement = BaseElement & {
       type: (args: SXL.Props) => AsyncGenElement;
-      props: Props;
-      children: Children;
-      isDynamic?: boolean;
-      ctx?: Context<Record<string, unknown>>;
-      refs?: unknown[];
     };
 
     /**
@@ -256,17 +221,12 @@ declare global {
     /**
      * The properties of a JSX component.
      */
-    export type StaticElement = {
+    export type StaticElement = BaseElement & {
       type:
         | string
         | NodeFactory<SXL.Props>
         | ClassFactory<SXL.Props>
         | ((args: SXL.Props) => AsyncGenElement);
-      props: Props;
-      children: Children;
-      isDynamic?: boolean;
-      ctx?: Context<Record<string, unknown>>;
-      refs?: unknown[];
     };
 
     /**

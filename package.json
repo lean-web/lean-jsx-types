@@ -1,14 +1,16 @@
 {
   "name": "lean-jsx-types",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "",
   "type": "module",
   "main": "index.js",
   "devDependencies": {
     "typescript": "^5.2.2"
   },
+  "files": ["lib"],
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "watch": "tsc -w"
   },
   "author": "",
   "license": "ISC"
