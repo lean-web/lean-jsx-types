@@ -18,6 +18,12 @@ export interface WebActions {
       noCache?: boolean;
     },
   ): Promise<boolean | RefetchState>;
+  updateContentWithResponse(
+    replacedId: string,
+    response: Response,
+    options?: { onlyReplaceContent?: boolean },
+  ): void;
+  urlForComponent(componentId: string): URL;
 }
 
 export interface WebContext<Data = Record<string, unknown>> {
