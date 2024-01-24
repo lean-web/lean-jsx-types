@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 import { SXLGlobalContext } from "./context";
 import { WebActions, WebContext, EventHandler, IWebHandler } from "./events";
+import { SVGElements } from "./svg";
 
 export type { WebContext, WebActions };
 
@@ -241,7 +242,9 @@ declare global {
      */
     export type Element = StaticElement | AsyncElement | AsyncGenElement;
 
-    export interface IntrinsicElements {
+    // interface SVGProps<T> extends SVGAttributes<T>
+
+    export interface IntrinsicElements extends SVGElements {
       a: HTMLAttributes<HTMLAnchorElement>;
       abbr: HTMLAttributes<HTMLElement>;
       address: HTMLAttributes<HTMLElement>;
