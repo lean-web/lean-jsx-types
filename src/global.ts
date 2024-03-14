@@ -6,30 +6,66 @@ import { SVGElements } from "./svg";
 
 export type { WebContext, WebActions };
 
-// We exclude properties that are actual
-// JavaScript methods for HTMLElement:
-type SkippedProps =
-  | "click"
-  | "attachInternals"
-  | "hidePopover"
-  | "showPopover"
-  | "togglePopover"
-  | "addEventListener"
-  | "removeEventListener";
+type IfEquals<X, Y, A = X, B = never> = (<T>() => T extends X ? 1 : 2) extends <
+  T,
+>() => T extends Y ? 1 : 2
+  ? A
+  : B;
+
+type WritableKeys<T> = {
+  [P in keyof T]-?: IfEquals<
+    { [Q in P]: T[P] },
+    { -readonly [Q in P]: T[P] },
+    P
+  >;
+}[keyof T];
+
+type SkippedProps = "outerHTML";
+
+type FilterNonHTMLAttributes<T extends HTMLElement> = {
+  [K in keyof T]-?: NonNullable<T[K]> extends
+    | Node
+    | Element
+    | HTMLElement
+    | NodeList
+    | HTMLCollectionBase
+    ? never
+    : K extends SkippedProps
+    ? never
+    : T[K] extends (...args: any[]) => any
+    ? never
+    : K extends keyof Node
+    ? never
+    : K;
+}[keyof T] &
+  WritableKeys<T>;
+
+type HTMLCSSKeys = {
+  [K in keyof CSSStyleDeclaration]: NonNullable<CSSStyleDeclaration[K]> extends
+    | string
+    | number
+    ? K
+    : never;
+}[keyof CSSStyleDeclaration];
 
 /**
  * A utility type for shaping {@link HTMLElement} properties in the way
  * LeanJSX expects.
  */
-type HTMLAttributes<T extends HTMLElement> = {
-  [K in keyof T]?: K extends SkippedProps
-    ? never
-    : K extends "children"
-    ? SXL.Children
-    : T[K] extends object
-    ? Partial<T[K]>
-    : EventHandler<T[K], any>;
-} & { ref?: string };
+type HTMLAttributes<T extends HTMLElement> = Pick<
+  {
+    [K in keyof T]?: K extends "children"
+      ? SXL.Children
+      : T[K] extends CSSStyleDeclaration
+      ? Partial<Pick<T[K], HTMLCSSKeys>>
+      : T[K] extends number
+      ? number | string
+      : T[K] extends object
+      ? Partial<T[K]>
+      : EventHandler<T[K], any>;
+  },
+  FilterNonHTMLAttributes<T> | "style"
+> & { ref?: string };
 
 interface CustomEventMap {
   refetch: CustomEvent<
