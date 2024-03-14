@@ -1,9 +1,20 @@
 {
   "name": "lean-jsx-types",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "",
   "type": "module",
   "main": "index.js",
+  "exports": {
+    "./context": {
+      "types": "./lib/context.d.ts"
+    },
+    "./global": {
+      "types": "./lib/global.d.ts"
+    },
+    "./events": {
+      "types": "./lib/events.d.ts"
+    }
+  },
   "devDependencies": {
     "typescript": "^5.2.2"
   },
