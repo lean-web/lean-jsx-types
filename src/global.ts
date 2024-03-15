@@ -145,22 +145,21 @@ declare global {
     /**
      * The base properties that a JSX component can receive.
      */
-    export type Props<P extends object = object, G = SXLGlobalContext> = Omit<
+    export type Props<P extends object = object> = Omit<
       HTMLAttributes<HTMLElement>,
       "children"
     > & {
       children?: Children;
       dataset?: DOMStringMap;
-      globalContext?: G;
+      globalContext?: SXLGlobalContext;
     } & P & { id?: string };
 
     /**
      * An override of {@link SXL.Props} that allows us to set a custom type for {@link SXLGlobalContext}.
      * This is mostly used during testing.
      */
-    export interface ComponentProps<G extends SXLGlobalContext>
-      extends Omit<Props, "globalContext"> {
-      globalContext?: G;
+    export interface ComponentProps extends Omit<Props, "globalContext"> {
+      globalContext?: SXLGlobalContext;
     }
 
     export type AsyncGenElement = AsyncGenerator<
