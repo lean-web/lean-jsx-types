@@ -1,15 +1,11 @@
 export type RefetchState = "TIMEOUT" | "ERROR" | "IGNORED";
 
 export interface WebActions {
-  refetchElement: (
+  refetchAPIC: (
     id: string,
     queryParams: Record<string, string | number | boolean>,
   ) => Promise<boolean | RefetchState>;
-  update: <T extends keyof JSX.IntrinsicElements>(
-    id: string,
-    params: JSX.IntrinsicElements[T],
-  ) => void;
-  replaceWith(
+  replaceAPIC(
     replacedId: string,
     replacementId: string,
     queryParams?: Record<string, string | number | boolean>,
@@ -18,27 +14,17 @@ export interface WebActions {
       noCache?: boolean;
     },
   ): Promise<boolean | RefetchState>;
-  updateContentWithResponse(
-    replacedId: string,
-    response: Response,
-    options?: { onlyReplaceContent?: boolean },
-  ): void;
   urlForComponent(componentId: string): URL;
 }
 
-export interface WebContext<Data = Record<string, unknown>> {
-  data: Data;
-  actions: WebActions;
-}
-
 type EventHandlerWithData<EventType, WebData> = {
-  handler: (ev: EventType, webContext: WebContext<WebData>) => unknown;
+  handler: (ev: EventType, actions: WebActions, webContext: WebData) => unknown;
   data: WebData;
 };
 
 type EventHandlerWithoutData<EventType> = (
   ev: EventType,
-  webContext: WebContext<void>,
+  actions: WebActions,
 ) => unknown;
 
 /**

@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-namespace */
 import { SXLGlobalContext } from "./context";
-import { WebActions, WebContext, EventHandler, IWebHandler } from "./events";
+import { WebActions, EventHandler, IWebHandler } from "./events";
 import { SVGElements } from "./svg";
 
-export type { WebContext, WebActions };
+export type { WebActions };
 
 type IfEquals<X, Y, A = X, B = never> = (<T>() => T extends X ? 1 : 2) extends <
   T,
