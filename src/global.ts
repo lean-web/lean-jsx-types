@@ -62,7 +62,7 @@ type HTMLAttributes<T extends HTMLElement> = Pick<
       ? number | string
       : T[K] extends object
       ? Partial<T[K]>
-      : EventHandler<T[K], any>;
+      : EventHandler<K, T[K], any>;
   },
   FilterNonHTMLAttributes<T> | "style"
 > & { ref?: string };
@@ -275,7 +275,11 @@ declare global {
      * A JSX component can returned by a regular, syncronous function as {@link SXL.StaticElement}
      * of by an async function (an async component) as {@link SXL.AsyncElement}
      */
-    export type Element = StaticElement | AsyncElement | AsyncGenElement;
+    export type Element =
+      | StaticElement
+      | AsyncElement
+      | AsyncGenElement
+      | ClassElement;
 
     // interface SVGProps<T> extends SVGAttributes<T>
 
@@ -319,7 +323,9 @@ declare global {
       figcaption: HTMLAttributes<HTMLElement>;
       figure: HTMLAttributes<HTMLElement>;
       footer: HTMLAttributes<HTMLElement>;
-      form: HTMLAttributes<HTMLFormElement>;
+      form: HTMLAttributes<HTMLFormElement> & {
+        onsubmit?: ((this: GlobalEventHandlers, ev: SubmitEvent) => any) | null;
+      };
       h1: HTMLAttributes<HTMLHeadingElement>;
       h2: HTMLAttributes<HTMLHeadingElement>;
       h3: HTMLAttributes<HTMLHeadingElement>;
@@ -425,3 +431,13 @@ declare global {
 }
 
 export {};
+
+type D = NonNullable<SXL.IntrinsicElements["button"]["onclick"]>;
+
+export const d: D = (ev) => {
+  console.log(ev.target);
+};
+
+export const m: D = (ev, a) => {
+  console.log(ev.target);
+};

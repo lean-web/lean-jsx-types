@@ -40,9 +40,14 @@ export type IWebHandler<EventType, WebData> =
  * Mapped types for converting HTMLElement default event handler function types
  * into the event handlers expected by LeanJSX
  */
-export type EventHandler<T, WebContext> = T extends (
+export type EventHandler<K, T, WebContext> = T extends (
   this: GlobalEventHandlers,
-  ev: infer E,
+  ev: infer E extends Event,
 ) => unknown
-  ? IWebHandler<E, WebContext>
+  ? IWebHandler<
+      K extends keyof GlobalEventHandlers
+        ? Parameters<NonNullable<GlobalEventHandlers[K]>>[0]
+        : E,
+      WebContext
+    >
   : T;
