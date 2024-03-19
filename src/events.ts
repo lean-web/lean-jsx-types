@@ -1,20 +1,25 @@
 export type RefetchState = "TIMEOUT" | "ERROR" | "IGNORED";
 
+export type APICRequest = Partial<Omit<Request, "url">> & {
+  onlyReplaceContent?: boolean;
+  streamResponse?: boolean;
+  noCache?: boolean;
+};
+
 export interface WebActions {
   refetchAPIC: (
     id: string,
     queryParams: Record<string, string | number | boolean>,
+    options?: APICRequest,
   ) => Promise<boolean | RefetchState>;
   replaceAPIC(
     replacedId: string,
     replacementId: string,
     queryParams?: Record<string, string | number | boolean>,
-    options?: {
-      onlyReplaceContent?: boolean;
-      noCache?: boolean;
-    },
+    options?: APICRequest,
   ): Promise<boolean | RefetchState>;
   urlForComponent(componentId: string): URL;
+  getElementByAPICId(id: string): Element | null;
 }
 
 type EventHandlerWithData<EventType, WebData> = {
