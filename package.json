@@ -16,6 +16,7 @@
     }
   },
   "devDependencies": {
+    "semantic-release": "^23.0.5",
     "typescript": "^5.2.2"
   },
   "files": ["lib"],
