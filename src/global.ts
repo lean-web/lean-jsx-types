@@ -65,7 +65,7 @@ type HTMLAttributes<T extends HTMLElement> = Pick<
       : EventHandler<K, T[K], any>;
   },
   FilterNonHTMLAttributes<T> | "style"
-> & { ref?: string };
+> & { ref?: string; dangerouslySetInnerHTML?: { __html: string } };
 
 interface CustomEventMap {
   refetch: CustomEvent<
@@ -135,6 +135,12 @@ declare global {
      */
     export type Context<Ctx extends Record<string, unknown>> = Ctx;
 
+    export type Child =
+      | string
+      | number
+      | boolean
+      | StaticElement
+      | StaticElement[];
     /**
      * The children elements of a JSX component.
      */
@@ -404,6 +410,8 @@ declare global {
       var: HTMLAttributes<HTMLElement>;
       video: HTMLAttributes<HTMLVideoElement>;
       wbr: HTMLAttributes<HTMLElement>;
+
+      jsxScript: HTMLAttributes<HTMLScriptElement>;
     }
   }
 

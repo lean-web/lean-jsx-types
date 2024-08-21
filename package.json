@@ -23,6 +23,7 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
+    "typecheck": "tsc",
     "semver": "semantic-release",
     "semver-check": "semantic-release --verify-conditions"
   },
