@@ -25,14 +25,18 @@
     "watch": "tsc -w",
     "typecheck": "tsc",
     "semver": "semantic-release",
-    "semver-check": "semantic-release --verify-conditions"
+    "semver-check": "npx node-env-run --exec \"semantic-release --ci false\""
   },
   "author": "",
   "license": "ISC",
   "release": {
     "branches": [
       "main",
-      { "name": "alpha", "channel": "alpha", "prerelease": true }
+      {
+        "name": "alpha",
+        "channel": "alpha",
+        "prerelease": true
+      }
     ]
   }
 }
