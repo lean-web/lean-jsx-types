@@ -17,7 +17,8 @@
   },
   "devDependencies": {
     "semantic-release": "^23.0.5",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "@types/node": "^20.9.0"
   },
   "overrides": {
     "@types/react": "../_EXCLUDED_"
