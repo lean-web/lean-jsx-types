@@ -6,7 +6,7 @@ export type APICRequest = Partial<Omit<Request, "url">> & {
   noCache?: boolean;
 };
 
-export interface WebActions {
+export interface IWebActions {
   refetchAPIC: (
     id: string,
     queryParams: Record<string, string | number | boolean>,
@@ -23,13 +23,17 @@ export interface WebActions {
 }
 
 type EventHandlerWithData<EventType, WebData> = {
-  handler: (ev: EventType, actions: WebActions, webContext: WebData) => unknown;
+  handler: (
+    ev: EventType,
+    actions: IWebActions,
+    webContext: WebData,
+  ) => unknown;
   data: WebData;
 };
 
 type EventHandlerWithoutData<EventType> = (
   ev: EventType,
-  actions: WebActions,
+  actions: IWebActions,
 ) => unknown;
 
 /**

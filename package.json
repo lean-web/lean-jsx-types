@@ -19,14 +19,15 @@
     "semantic-release": "^23.0.5",
     "typescript": "^5.2.2"
   },
-  "files": [
-    "lib"
-  ],
+  "overrides": {
+    "@types/react": "../_EXCLUDED_"
+  },
+  "files": ["lib"],
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
     "typecheck": "tsc",
-    "semver": "semantic-release",
+    "semver": "npx node-env-run --exec \"semantic-release --ci false\"",
     "semver-check": "npx node-env-run --exec \"semantic-release --ci false\""
   },
   "author": "",

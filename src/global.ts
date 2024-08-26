@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-namespace */
 import { SXLGlobalContext } from "./context";
-import { WebActions, EventHandler, IWebHandler } from "./events";
+import { IWebActions, EventHandler, IWebHandler } from "./events";
 import { SVGElements } from "./svg";
 
-export type { WebActions };
+export type { IWebActions };
 
 type IfEquals<X, Y, A = X, B = never> = (<T>() => T extends X ? 1 : 2) extends <
   T,
@@ -66,6 +66,9 @@ type HTMLAttributes<T extends HTMLElement> = Pick<
   },
   FilterNonHTMLAttributes<T> | "style"
 > & { ref?: string; dangerouslySetInnerHTML?: { __html: string } };
+
+export type ButtonProps = HTMLAttributes<HTMLButtonElement>;
+export type OnClickType = ButtonProps["onclick"];
 
 interface CustomEventMap {
   refetch: CustomEvent<
