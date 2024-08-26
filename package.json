@@ -28,7 +28,7 @@
     "watch": "tsc -w",
     "typecheck": "tsc",
     "semver": "npx node-env-run --exec \"semantic-release --ci false\"",
-    "semver-check": "npx node-env-run --exec \"semantic-release --ci false\""
+    "semver-check": "npx node-env-run --exec \"semantic-release --dry-run --ci false\""
   },
   "author": "",
   "license": "ISC",
